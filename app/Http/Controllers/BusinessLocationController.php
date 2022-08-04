@@ -9,6 +9,7 @@ use App\InvoiceScheme;
 use App\SellingPriceGroup;
 use App\Utils\ModuleUtil;
 use App\Utils\Util;
+use DB;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
 use Yajra\DataTables\Facades\DataTables;
@@ -82,6 +83,7 @@ class BusinessLocationController extends Controller
                     'action',
                     '<button type="button" data-href="{{action(\'BusinessLocationController@edit\', [$id])}}" class="btn btn-xs btn-primary btn-modal" data-container=".location_edit_modal"><i class="glyphicon glyphicon-edit"></i> @lang("messages.edit")</button>
                     <a href="{{route(\'location.settings\', [$id])}}" class="btn btn-success btn-xs"><i class="fa fa-wrench"></i> @lang("messages.settings")</a>
+                    <a type="button" href="busniess-location-destroy/{{$id}}" class="btn btn-xs btn-secondary" ><i class="glyphicon glyphicon-trash"></i> @lang("messages.delete")</a>
 
                     <button type="button" data-href="{{action(\'BusinessLocationController@activateDeactivateLocation\', [$id])}}" class="btn btn-xs activate-deactivate-location @if($is_active) btn-danger @else btn-success @endif"><i class="fa fa-power-off"></i> @if($is_active) @lang("lang_v1.deactivate_location") @else @lang("lang_v1.activate_location") @endif </button>
                     '
@@ -304,6 +306,20 @@ class BusinessLocationController extends Controller
     public function destroy($id)
     {
         //
+        
+        if (!auth()->user()->can('business_settings.access')) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $business_id = request()->session()->get('user.business_id');
+        $location = BusinessLocation::where('business_id', $business_id)
+                                    ->find($id);
+      
+        
+
+        DB::table('business_locations')->where('id', $id)->delete();
+        return view('business_location.index');
+      
     }
 
     /**

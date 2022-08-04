@@ -193,6 +193,7 @@
                     "searchable": false
                 } ],
                 columns: [
+                    
                         { data: 'mass_delete'  },
                         { data: 'image', name: 'products.image'  },
                         { data: 'action', name: 'action'},
@@ -204,7 +205,10 @@
                         @can('access_default_selling_price')
                             { data: 'selling_price', name: 'max_price', searchable: false},
                         @endcan
+                        { data: 'quantity', searchable: false},
                         { data: 'current_stock', searchable: false},
+                     
+
                         { data: 'type', name: 'products.type'},
                         { data: 'category', name: 'c1.name'},
                         { data: 'brand', name: 'brands.name'},

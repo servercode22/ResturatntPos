@@ -76,6 +76,7 @@ class ProductController extends Controller
                 ->leftJoin('categories as c1', 'products.category_id', '=', 'c1.id')
                 ->leftJoin('categories as c2', 'products.sub_category_id', '=', 'c2.id')
                 ->leftJoin('tax_rates', 'products.tax', '=', 'tax_rates.id')
+                ->leftjoin('purchase_lines as p','p.product_id','=','products.id')
                 ->join('variations as v', 'v.product_id', '=', 'products.id')
                 ->leftJoin('variation_location_details as vld', function($join) use ($permitted_locations){
                     $join->on('vld.variation_id', '=', 'v.id');
@@ -116,13 +117,16 @@ class ProductController extends Controller
                 'products.sku',
                 'products.image',
                 'products.enable_stock',
+                'p.quantity',
+                
                 'products.is_inactive',
                 'products.not_for_selling',
                 'products.product_custom_field1',
                 'products.product_custom_field2',
                 'products.product_custom_field3',
                 'products.product_custom_field4',
-                DB::raw('SUM(vld.qty_available) as current_stock'),
+                //sun remove on vld.quantity
+                DB::raw('(vld.qty_available) as current_stock'),
                 DB::raw('MAX(v.sell_price_inc_tax) as max_price'),
                 DB::raw('MIN(v.sell_price_inc_tax) as min_price'),
                 DB::raw('MAX(v.dpp_inc_tax) as max_purchase_price'),
@@ -586,6 +590,7 @@ class ProductController extends Controller
 
         $business_id = request()->session()->get('user.business_id');
         $details = $this->productUtil->getRackDetails($business_id, $id, true);
+    
 
         return view('product.show')->with(compact('details'));
     }

@@ -106,4 +106,9 @@ return [
     'tax_number2' => 'Tax Number 2',
     'is_active' => 'Active',
     'created_by' => 'Created By',
+    'register_mac_address'=>'Regiester MAC Address',
+    'serial_key'=>'Serial Key',
+    'ip_address'=>'MAC Address',
+    'customer_name'=>'Customer Name',
+    
 ];

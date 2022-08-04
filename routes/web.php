@@ -19,6 +19,8 @@ Route::middleware(['setData'])->group(function () {
     });
 
     Auth::routes();
+    // Route::get('/business/moreregistration', 'BusinessController@getmoreregiestration')->name('business.getmoreregiestration');
+    // Route::post('/business/addmacaddress','BusinessController@addmacaddress')->name('business.addmacaddress');
 
     Route::get('/business/register', 'BusinessController@getRegister')->name('business.getRegister');
     Route::post('/business/register', 'BusinessController@postRegister')->name('business.postRegister');
@@ -231,7 +233,7 @@ Route::get('/stocktotal/{stid}/{totalstock}/{stockqun}','ReportController@stockt
         Route::get('settings', 'LocationSettingsController@index')->name('settings');
         Route::post('settings', 'LocationSettingsController@updateSettings')->name('settings_update');
     });
-
+                Route::get('busniess-location-destroy/{id}','BusinessLocationController@destroy');
     //Business Locations...
     Route::post('business-location/check-location-id', 'BusinessLocationController@checkLocationId');
     Route::resource('business-location', 'BusinessLocationController');

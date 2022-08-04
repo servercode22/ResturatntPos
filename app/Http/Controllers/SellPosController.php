@@ -496,16 +496,19 @@ class SellPosController extends Controller
                     
             $locationid=$request['location_id'];
                     //update product stock
+                    
                     foreach ($input['products'] as $product) {
+                        // dd($product);
                         
                         $data=DB::table('mfg_recipes')->where('variation_id',$product['variation_id'])->get();
+                      
                         
                                 $checkcount = $data->count();
                                 if($data->count() > 0){
                                     $mfg=DB::table('mfg_recipes')->where('variation_id',$product['variation_id'])->first();
                                     $intergirdent =DB::table('mfg_recipe_ingredients')->where('mfg_recipe_id',$mfg->id)->get();
 
-                                    // dd($data2);
+                                    
                                     $this->productUtil->productionquantity($product ,$data,$mfg,
                                     
                                    
@@ -530,13 +533,45 @@ class SellPosController extends Controller
                         }
 
                         if ($product['product_type'] == 'combo') {
-                            //Decrease quantity of combo as well.
-                            $this->productUtil
-                                ->decreaseProductQuantityCombo(
-                                    $product['combo'],
-                                    $input['location_id']
-                                );
-                        }
+                                    $locationid=$request['location_id'];
+
+                                $vardetal=DB::table('variations')->where('id',$product['variation_id'])->get();
+                                
+                                foreach ($vardetal as $getvariation) {
+                                    $all=$getvariation->combo_variations;
+                                    $vartotal=json_decode($all);
+                                    foreach ($vartotal as $value) {
+                                        $varid=$value->variation_id;
+                                        $qut=$value->quantity;
+                                        $data=DB::table('mfg_recipes')->where('variation_id',$varid)->get();
+                                        $checkcount = $data->count();
+
+                                        if($data->count() > 0){
+                                            
+                                            $mfg=DB::table('mfg_recipes')->where('variation_id',$varid)->first();
+                                            
+                                            $intergirdent =DB::table('mfg_recipe_ingredients')->where('mfg_recipe_id',$mfg->id)->get();
+                                            
+                                            $this->productUtil->decreaseProductQuantityCombo(
+                                            $product['combo'],
+                                            $input['location_id'],
+                                            $mfg,$intergirdent,$locationid,$varid,$qut
+                                             );
+                                        }
+                                        
+
+                                    }
+                                }
+                             
+                                
+                               
+                                
+                               
+                               
+                                    
+                                 
+                        }    
+                    
                     }
 
                     //Add payments to Cash Register
@@ -628,8 +663,10 @@ class SellPosController extends Controller
                 }
                
                 if ($print_invoice) {
+                   
                                       
                     $receipt = $this->receiptContent($business_id, $input['location_id'], $transaction->id, null, false, true, $invoice_layout_id);
+                   
                 }
 
                 $output = ['success' => 1, 'msg' => $msg, 'receipt' => $receipt ];
@@ -757,11 +794,16 @@ class SellPosController extends Controller
             $output['print_type'] = 'printer';
             $output['printer_config'] = $this->businessUtil->printerConfig($business_id, $location_details->printer_id);
             $output['data'] = $receipt_details;
+            
         } else {
+            
             $layout = !empty($receipt_details->design) ? 'sale_pos.receipts.' . $receipt_details->design : 'sale_pos.receipts.classic';
 
             $output['html_content'] = view($layout, compact('receipt_details'))->render();
+          
+            
         }
+      
         
         return $output;
     }
@@ -1649,6 +1691,7 @@ class SellPosController extends Controller
      */
     public function getPaymentRow(Request $request)
     {
+        
         $business_id = request()->session()->get('user.business_id');
         
         $row_index = $request->input('row_index');
@@ -2629,6 +2672,7 @@ class SellPosController extends Controller
      */
     public function convertToInvoice($id)
     {
+        
         if (!auth()->user()->can('sell.create') && !auth()->user()->can('direct_sell.access')) {
             abort(403, 'Unauthorized action.');
         }

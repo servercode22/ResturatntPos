@@ -1,4 +1,3 @@
-
 @forelse($products as $product)
 
 	<div class="col-md-3 col-xs-4 product_list no-print">

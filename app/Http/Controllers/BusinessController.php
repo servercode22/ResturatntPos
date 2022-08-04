@@ -9,6 +9,7 @@ use App\System;
 use App\TaxRate;
 use App\Unit;
 use App\User;
+// use App\macaddres;
 use App\Utils\BusinessUtil;
 use App\Utils\ModuleUtil;
 use App\Utils\RestaurantUtil;
@@ -216,6 +217,7 @@ class BusinessController extends Controller
             if ($is_installed_superadmin && !empty($package_id) && (config('app.env') != 'demo')) {
                 $package = \Modules\Superadmin\Entities\Package::find($package_id);
                 if (!empty($package)) {
+                   
                     Auth::login($user);
                     return redirect()->route('register-pay', ['package_id' => $package_id]);
                 }
@@ -225,7 +227,7 @@ class BusinessController extends Controller
                     'msg' => __('business.business_created_succesfully')
                 ];
 
-            return redirect('login')->with('status', $output);
+            return redirect('/login')->with('status', $output);
         } catch (\Exception $e) {
             DB::rollBack();
             \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
@@ -235,8 +237,7 @@ class BusinessController extends Controller
                         ];
 
             return back()->with('status', $output)->withInput();
-        }
-    }
+        }}
     
     /**
      * Handles the validation username
@@ -596,4 +597,31 @@ class BusinessController extends Controller
 
         return $output;
     }
+    // public function getmoreregiestration()
+    // {
+    //     $ipaddress= request()->ip();
+    //     $macAddr = exec('getmac');
+        
+       
+    //     return view('business.partials.moreregister_forn',compact(
+    //         'ipaddress','macAddr'
+    //     ));
+    // }
+    // public function addmacaddress(Request $request)
+    // {
+    //     $macaddress=new macaddres;
+    //     $macaddress->serialkey=$request->serialkey;
+    //     $macaddress->macaddress=$request->macaddress;
+    //     $macaddress->customename=$request->customename;
+    //     $macaddress->start_date=$request->start_date;
+    //     $macaddress->save();
+    //     $output = ['success' => 1,
+    //                 'msg' => __('business.business_created_succesfully')
+    //             ];
+
+    //         return redirect('login')->with('status', $output);
+
+        
+        
+    // }
 }

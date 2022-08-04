@@ -22,6 +22,7 @@
                 @endphp
                 <th>@lang('lang_v1.selling_price')</th>
             @endcan
+            <th>@lang('Opening Stock')</th>
             <th>@lang('report.current_stock')</th>
             <th>@lang('product.product_type')</th>
             <th>@lang('product.category')</th>

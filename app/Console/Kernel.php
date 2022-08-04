@@ -24,6 +24,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        //table rename change 
+        // $schedule->command('minute:update')->everyMinute();
         $env = config('app.env');
         $email = config('mail.username');
 

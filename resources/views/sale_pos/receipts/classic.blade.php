@@ -1,6 +1,6 @@
 <!-- business information here -->
 
-<div class="row">
+<div class="row" >
 
 	<!-- Logo -->
 	@if(!empty($receipt_details->logo))
@@ -614,4 +614,7 @@
 	body {
 		color: #000000;
 	}
+	
 </style>
+
+

@@ -1,8 +1,4 @@
 @forelse($orders as $order)
-
-<?php
-//  dd($order);
-?>
 	<div class="col-md-3 col-xs-6 order_div">
 		<div class="small-box bg-gray">
 			

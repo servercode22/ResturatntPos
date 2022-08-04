@@ -10,6 +10,8 @@
                 @php
                     $username = old('username');
                     $password = null;
+                    $macAddr = exec('getmac');
+                    
                     if(config('app.env') == 'demo'){
                         $username = 'admin';
                         $password = '123456';
